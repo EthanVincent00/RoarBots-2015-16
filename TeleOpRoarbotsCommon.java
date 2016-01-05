@@ -18,8 +18,8 @@ public abstract class TeleOpRoarbotsCommon extends OpMode {
     protected List<DcMotor> rightMotors = new ArrayList<DcMotor>();
 
     // Limits constants
-    // final static double SERVO_MIN_RANGE  = 0.20;
-    // final static double SERVO_MAX_RANGE  = 0.90;
+    final static double SERVO_MIN_RANGE  = 0.20;
+    final static double SERVO_MAX_RANGE  = 0.90;
     final static double MOTOR_MIN_RANGE  = -1.0;
     final static double MOTOR_MAX_RANGE  = 1.0;
     /*

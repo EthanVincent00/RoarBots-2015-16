@@ -1,9 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 /**
- * Created by Roarbots on 11/1/2015.
+ * Created by Roarbots on 12/15/2015.
  */
-public class DefenseStyle1 extends AutonomousResQCommon{
+public class BackwardClimbers extends AutonomousResQCommon{
     @Override
     public void runOpMode(){
         try {
@@ -11,7 +11,7 @@ public class DefenseStyle1 extends AutonomousResQCommon{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //super.drive(.5, 8);
+        super.drive(-1, 12);//(power, inches)
     }
 
 }

@@ -46,7 +46,7 @@ public class TeleOpAlternate extends TeleOpResQCommonV2 {
         double arm_angle_power = 0.0;
         double arm_extender_power = 0.0;
         double left_stick = gamepad1.left_stick_y;
-        double right_stick = gamepad1.right_stick_y;
+        double right_stick = gamepad1.right_stick_x;
         double motorPosition = 0;
         double diffMotor_Pos = .1;
 
@@ -57,15 +57,26 @@ public class TeleOpAlternate extends TeleOpResQCommonV2 {
 
 
         // write the values to the motors
-        if (left_drive_power < 0.0) {
-            left_drive_power = 0.0;
+        if (left_stick != 0) {
+            if (right_stick < 0.0) { //turn left
 
-        } else if (left_drive_power > 0.0){
+                right_drive_power = left_stick;
+                left_drive_power = left_stick + (right_stick * left_stick);
 
+            } else if (right_stick >= 0.0) { //turn right or do forward/backward movement
 
-        } else {
+                left_drive_power = left_stick;
+                right_drive_power = left_stick - (right_stick * left_stick);
+
+            }
+        } else { //turn in place
+
+            left_drive_power = right_stick;
+            right_drive_power = -1 * left_drive_power;
 
         }
+
+        //actually set the values to the motors
         setLeftPower(left_drive_power);
         setRightPower(right_drive_power);
 
@@ -82,7 +93,7 @@ public class TeleOpAlternate extends TeleOpResQCommonV2 {
                 arm_angle_power = 0.0;
             }
         }
-        treadAngleMotor.setPower(arm_angle_power);
+      //  treadAngleMotor.setPower(arm_angle_power);
 
         if (gamepad2.right_bumper) {
             arm_wheel_power = 0.0;
@@ -90,13 +101,13 @@ public class TeleOpAlternate extends TeleOpResQCommonV2 {
             arm_wheel_power = 1.0;
         }
 
-        treadPowerMotor.setPower(arm_wheel_power);
+     //   treadPowerMotor.setPower(arm_wheel_power);
 
         arm_extender_power = Range.clip(gamepad2.right_stick_y, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
         if (Math.abs(arm_extender_power) < 0.1) {
             arm_extender_power = 0.0;
         }
-        setExtenderPower(arm_extender_power);
+       // setExtenderPower(arm_extender_power);
 
 
         telemetry.addData("left motor ", left_drive_power);

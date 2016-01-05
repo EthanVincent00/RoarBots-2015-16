@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -10,8 +11,10 @@ public class TeleOp extends TeleOpResQCommonV2 {
     private boolean pushOnceRT = false;
     private boolean pushOnceLT = false;
     private boolean pushOnceRB = false;
-    private boolean extraWheelOn = false;
-    private double arm_wheel_power = 0.0;
+    private double newClipNum = .75;
+    private double L_moustache_distance = 60.0;
+    private double R_moustache_distance = 60.0;
+
     /*
      * This method will be called repeatedly in a loop
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
@@ -26,6 +29,9 @@ public class TeleOp extends TeleOpResQCommonV2 {
     public void init() {
         super.init();
 
+        RightMoustache.setPosition(.90);
+        LeftMoustache.setPosition(.1);
+        theOneThatFlips.setPosition(1);
     }
 
     @Override
@@ -41,63 +47,67 @@ public class TeleOp extends TeleOpResQCommonV2 {
 
         double left_drive_power = 0.0;
         double right_drive_power = 0.0;
-        double arm_angle_power = 0.0;
-        double arm_extender_power = 0.0;
+        double tape_angle_power = 0.0;
+        double tape_extender_power = 0.0;
         double left_stick = gamepad1.left_stick_y;
         double right_stick = gamepad1.right_stick_y;
-        double motorPosition = 0;
-        double diffMotor_Pos = .1;
+        double extension_stick = gamepad2.left_stick_y;
+        double angle_stick = gamepad2.right_stick_y;
+
+        boolean confirmButton = gamepad2.back;
+        boolean LMButton = gamepad2.x;
+        boolean RMButton = gamepad2.b;
+        boolean LTrigger = gamepad2.left_bumper;
+        boolean RTrigger = gamepad2.right_bumper;
 
         // clip the right/left values so that the values never exceed +/- 1
         left_drive_power = Range.clip(left_stick, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
         right_drive_power = Range.clip(right_stick, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
-        motorPosition = Range.clip(motorPosition, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
+        tape_extender_power = Range.clip(extension_stick, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
+        tape_angle_power = Range.clip(angle_stick, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
 
+//1337
 
         // write the values to the motors
-        if (Math.abs(left_drive_power) < 0.1) {
-            left_drive_power = 0.0;
-        }
+        if (Math.abs(left_drive_power) < 0.05) {
+            left_drive_power = 0.0;}
         setLeftPower(left_drive_power);
-        if (Math.abs(right_drive_power) < 0.1) {
-            right_drive_power = 0.0;
-        }
+
+        if (Math.abs(right_drive_power) < 0.05) {
+            right_drive_power = 0.0;}
         setRightPower(right_drive_power);
 
-        //if the right  trigger is pressed and above .5 then the motors
-        //will be set to 100% power and move forward
-        if (gamepad1.right_trigger >= .5) {
-            arm_angle_power = 1.0;
-        } else {
-            //if the left trigger is pressed and above .5 then the motors
-            //will be set to 100% power and move backwards
-            if (gamepad1.left_trigger >= .5) {
-                arm_angle_power = -1.0;
-            } else {
-                arm_angle_power = 0.0;
+        if (Math.abs(tape_extender_power) < 0.05) {
+            tape_extender_power = 0.0;}
+        setTapeMotorPower(tape_extender_power);
+
+        if (Math.abs(tape_angle_power) < 0.05) {
+            tape_angle_power = 0.0;}
+        setTapeAnglePower(tape_angle_power);
+
+        //if (confirmButton) {
+            if (LMButton) {
+                //Left - EL MOUSTACHIO
+                LeftMoustache.setPosition(0.9);
+            } else if (RMButton) {
+                //Right - OUR MOUSTACHE
+                RightMoustache.setPosition(0);
             }
+        //}
+
+        if (LTrigger) {
+            theOneThatFlips.setPosition(0.9);
+        } else if (RTrigger) {
+            theOneThatFlips.setPosition(0);
         }
-        treadAngleMotor.setPower(arm_angle_power);
 
-        if (gamepad2.right_bumper) {
-            arm_wheel_power = 0.0;
-        } else if (gamepad2.left_bumper) {
-            arm_wheel_power = 1.0;
-        }
+        leftMotors.get(1).setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        treadPowerMotor.setPower(arm_wheel_power);
-
-        arm_extender_power = Range.clip(gamepad2.right_stick_y, MOTOR_MIN_RANGE, MOTOR_MAX_RANGE);
-        if (Math.abs(arm_extender_power) < 0.1) {
-            arm_extender_power = 0.0;
-        }
-        setExtenderPower(arm_extender_power);
-
+        telemetry.addData("Encoder Current Position ", leftMotors.get(1).getCurrentPosition());
 
         telemetry.addData("left motor ", left_drive_power);
         telemetry.addData("right motor ", right_drive_power);
-        telemetry.addData("tread wheel power ", arm_wheel_power);
-        telemetry.addData("tread wheel angle power ", arm_angle_power);
-        telemetry.addData("arm extender power ", arm_extender_power);
+        telemetry.addData("tape power ", tape_extender_power);
+        telemetry.addData("tape angle power ", tape_angle_power);
     }
 }

@@ -15,8 +15,8 @@ public abstract class AutonomousRoarbotsCommon extends LinearOpMode {
     protected List<DcMotor> rightMotors = new ArrayList<DcMotor>();
 
     // Limits constants
-    // final static double SERVO_MIN_RANGE  = 0.20;
-    // final static double SERVO_MAX_RANGE  = 0.90;
+    final static double SERVO_MIN_RANGE  = 0.20;
+    final static double SERVO_MAX_RANGE  = 0.90;
     final static double MOTOR_MIN_RANGE  = -1.0;
     final static double MOTOR_MAX_RANGE  = 1.0;
 
@@ -25,10 +25,10 @@ public abstract class AutonomousRoarbotsCommon extends LinearOpMode {
     }
 
     public void setLeftPower(double power) {
-        for (DcMotor singleMotor : leftMotors) {
-            singleMotor.setPower(power);
-        }
+    for (DcMotor singleMotor : leftMotors) {
+        singleMotor.setPower(power);
     }
+}
 
     public void setRightPower(double power) {
         for (DcMotor singleMotor : rightMotors) {

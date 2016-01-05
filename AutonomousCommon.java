@@ -3,8 +3,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Created by Roarbots on 11/20/2015.
  */
@@ -17,21 +15,26 @@ public class AutonomousCommon extends AutonomousRoarbotsCommon {
     }
 
     private double myWheelSize;
-    private double driveTrainRatio;
+    private double myDriveTrainRatio;
+    private double myMotorRatio;
     private static final double encoderClicksPerRev = 280;
-    private static final double motorRatio = 40;
-    private static final double driveRatio = 1;
-    private static final double wheelSize = 6;
-    private static final double clicksPerInch = (encoderClicksPerRev * motorRatio * driveRatio) / (Math.PI * wheelSize);
+    private static double clicksPerInch;
 
     /*
      * Sets up the parameters of the robot to use in our functions
      *
      * wheelSize = Diameter of the wheel in inches
      */
-    public void setupRobotParameters(double myWheelSize, double myDriveTrainRatio) {
-        myWheelSize = this.myWheelSize;
-        driveTrainRatio = myDriveTrainRatio;
+    public void setupRobotParameters(double newWheelSize, double newDriveTrainRatio, double newMotorRatio) {
+        for (DcMotor singleMotor : rightMotors) {
+            singleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }for (DcMotor singleMotor : leftMotors) {
+            singleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
+        myWheelSize = newWheelSize;
+        myDriveTrainRatio = newDriveTrainRatio;
+        myMotorRatio = newMotorRatio;
+        clicksPerInch = (encoderClicksPerRev * myMotorRatio * myDriveTrainRatio) / (Math.PI * myWheelSize);
     }
 
     /*
@@ -43,25 +46,17 @@ public class AutonomousCommon extends AutonomousRoarbotsCommon {
 
     // 280 - clicks per encoder revolution
     //  clicks per inch
-    public void drive(double speed, double distance) throws InterruptedException {
+    public void drive(double speed, double distance) {
         int clicksForDistance = (int)(distance * clicksPerInch);
         for (DcMotor singleMotor : rightMotors) {
-            singleMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+            singleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
         for (DcMotor singleMotor : leftMotors) {
-            singleMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+            singleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
-        /*while (leftMotors.get(0).getCurrentPosition() != 0) {
-            sleep(200);
-        }*/
         leftMotors.get(0).setTargetPosition(clicksForDistance);
-        for (DcMotor singleMotor : rightMotors) {
-            singleMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        }
-        for (DcMotor singleMotor : leftMotors) {
-            singleMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        }
-        int position = leftMotors.get(0).getCurrentPosition();
+
+        int position;
 
         do {
             for (DcMotor singleMotor : leftMotors) {

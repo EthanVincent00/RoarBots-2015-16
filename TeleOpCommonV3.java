@@ -14,21 +14,21 @@ import static java.lang.Thread.sleep;
 public abstract class TeleOpCommonV3 extends TeleOpRoarbotsCommon {
 
     private double myWheelSize;
-    private double driveTrainRatio;
+    private double myDriveTrainRatio;
+    private double myMotorRatio;
     private static final double encoderClicksPerRev = 280;
-    private static final double motorRatio = 40;
-    private static final double driveRatio = 1;
-    private static final double wheelSize = 6;
-    private static final double clicksPerInch = (encoderClicksPerRev * motorRatio * driveRatio) / (Math.PI * wheelSize);
+    private static double clicksPerInch;
 
     /*
      * Sets up the parameters of the robot to use in our functions
      *
      * wheelSize = Diameter of the wheel in inches
      */
-    public void setupRobotParameters(double myWheelSize, double myDriveTrainRatio) {
-        myWheelSize = this.myWheelSize;
-        driveTrainRatio = myDriveTrainRatio;
+    public void setupRobotParameters(double newWheelSize, double newDriveTrainRatio, double newMotorRatio) {
+        myWheelSize = newWheelSize;
+        myDriveTrainRatio = newDriveTrainRatio;
+        myMotorRatio = newMotorRatio;
+        clicksPerInch = (encoderClicksPerRev * myMotorRatio * myDriveTrainRatio) / (Math.PI * myWheelSize);
     }
 
     /*

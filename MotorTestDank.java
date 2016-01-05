@@ -45,9 +45,11 @@ public class MotorTestDank extends OpMode {
     boolean pushOnceA = false;
     boolean pushOnceY = false;
 
-    MediaPlayer s1;
+    MediaPlayer player;
 
-    MotorTestDank.this.s1 = MediaPlayer(MotorTestDank.this, R.drawable.m1);
+  //  player = MediaPlayer.create(Games.this,R.raw.macdonald);
+
+
 
     /*
      * Code to run when the op mode is first enabled goes here

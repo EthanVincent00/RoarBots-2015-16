@@ -37,7 +37,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 /**
  * Register Op Modes
  */
-public class FtcOpModeRegister implements OpModeRegister {
+public class
+        FtcOpModeRegister implements OpModeRegister {
 
   /**
    * The Op Mode Manager will call this method when it wants a list of all
@@ -61,11 +62,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("MotorTestDank", MotorTestDank.class);
     manager.register("AutonomousTest", AutonomousTest.class);
     manager.register("FloorGoal7ft", FloorGoal7Feet.class);
-    manager.register("Defense1", DefenseStyle1.class);
-    manager.register("MountainLowRed", MountainLowRed.class);
-    manager.register("MountainLowBlue", MountainLowBlue.class);
-    manager.register("OppositeMLBlue", OppositeMLBlue.class);
-    manager.register("OppositeMLRed", OppositeMLRed.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
